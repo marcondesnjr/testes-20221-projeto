@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="3.1" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>JSP Files</web-resource-name>
+            <description>No direct access to JSP files</description>
+            <url-pattern>/pages/*</url-pattern>
+            <http-method>POST</http-method>
+            <http-method>GET</http-method>
+        </web-resource-collection>
+        <auth-constraint>
+            <description>No direct browser access to JSP files</description>
+            <role-name>NobodyHasThisRole</role-name>
+        </auth-constraint>
+    </security-constraint>
+    
+    <filter>
+        <filter-name>UrlRewriteFilter</filter-name>
+        <filter-class>org.tuckey.web.filters.urlrewrite.UrlRewriteFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>UrlRewriteFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+        <dispatcher>REQUEST</dispatcher>
+        <dispatcher>FORWARD</dispatcher>
+    </filter-mapping>
+    
+    <filter>
+        <filter-name>LoginFilter</filter-name>
+        <filter-class>io.github.marcondesnjr.sismovie.filters.LoginFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>LoginFilter</filter-name>
+        <servlet-name>controller</servlet-name>
+        <dispatcher>REQUEST</dispatcher>
+        <dispatcher>FORWARD</dispatcher>
+    </filter-mapping>
+    
+    <error-page>
+        <error-code>210</error-code>
+        <location>/login-usuario.jsp</location>
+    </error-page>
+    
+    <error-page>
+        <location>/pages/404-error.html</location>
+    </error-page>
+    
+    <jsp-config>
+        <jsp-property-group>
+            <url-pattern>*.jsp</url-pattern>
+            <include-prelude>header.jspf</include-prelude>
+            <include-coda>footer.jspf</include-coda>
+        </jsp-property-group>
+    </jsp-config>
+    <listener>
+        <listener-class>io.github.marcondesnjr.sismovie.servlets.ContextListener</listener-class>
+    </listener>
+    <servlet>
+        <servlet-name>index</servlet-name>
+        <servlet-class>io.github.marcondesnjr.sismovie.servlets.Index</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>index</servlet-name>
+        <url-pattern>/index</url-pattern>
+    </servlet-mapping>
+    
+    <welcome-file-list>  
+        <welcome-file>index</welcome-file>  
+    </welcome-file-list>
+
+</web-app>
