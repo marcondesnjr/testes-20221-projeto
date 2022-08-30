@@ -12,12 +12,7 @@ import java.util.List;
  * @author José Marcondes do Nascimento Junior
  */
 public class GerenciadorGrupo {
-    public static Grupo salvar(Grupo grp) throws PersistenceException{
-        try(DAOGrupo dao = CriadorFabrica.criarFabrica(CriadorFabrica.BANCO_DE_DADOS).criarDAOGrupo()){
-            return dao.persiste(grp);
-        }
-    }
-    
+
     public static Grupo localizar(int id) throws PersistenceException{
         try(DAOGrupo dao = CriadorFabrica.criarFabrica(CriadorFabrica.BANCO_DE_DADOS).criarDAOGrupo()){
             return dao.localiza(id);
@@ -33,6 +28,12 @@ public class GerenciadorGrupo {
     public static  List<Grupo> localizarPorNome(String nome) throws PersistenceException{
         try(DAOGrupo dao = CriadorFabrica.criarFabrica(CriadorFabrica.BANCO_DE_DADOS).criarDAOGrupo()){
             return dao.localizarPorNome(nome);
+        }
+    }
+
+    public Grupo salvar(Grupo grp) throws PersistenceException{
+        try(DAOGrupo dao = CriadorFabrica.criarFabrica(CriadorFabrica.BANCO_DE_DADOS).criarDAOGrupo()){
+            return dao.persiste(grp);
         }
     }
 }

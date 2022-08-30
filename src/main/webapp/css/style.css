@@ -2782,7 +2782,7 @@ img{
         height: 250px;
     }
 }
-//XS
+/*/XS*/
 @media only screen and (min-width : 480px) {
     .img-movie-thumb, .foto-movie{
         height: 800px;

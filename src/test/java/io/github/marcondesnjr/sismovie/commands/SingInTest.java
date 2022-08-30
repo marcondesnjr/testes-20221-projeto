@@ -19,6 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.Map;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -56,18 +57,7 @@ class SingInTest {
     @DisplayName("Cadastra um usuário válido")
     @Test
     void executeValido() throws IOException, AlreadyExistsException, PersistenceException {
-
-        Mockito.when(mockReq.getParameter("nome")).thenReturn(this.expectedUser.getNome());
-        Mockito.when(mockReq.getParameter("sobrenome")).thenReturn(this.expectedUser.getSobrenome());
-        Mockito.when(mockReq.getParameter("email")).thenReturn(this.expectedUser.getEmail());
-        Mockito.when(mockReq.getParameter("senha")).thenReturn(this.expectedUser.getSenha());
-        Mockito.when(mockReq.getParameter("dataNasc")).thenReturn(this.expectedUser.getDataNasc().toString());
-        Mockito.when(mockReq.getParameter("cidade")).thenReturn(this.expectedUser.getCidade());
-        Mockito.when(mockReq.getParameter("apelido")).thenReturn(this.expectedUser.getApelido());
-        Mockito.when(mockReq.getParameter("estado")).thenReturn(this.expectedUser.getEstado().toString());
-
-        Mockito.when(photoUpload.upload(Mockito.any(),Mockito.any(),Mockito.any(),Mockito.any(),Mockito.any()))
-                .thenReturn(null);
+        loadUserParams();
         Mockito.when(sisMovie.getEstadoPelaSigla(Mockito.anyString())).thenReturn(Estado.AC);
         Mockito.when(mockReq.getSession().getAttribute("usrLog")).thenReturn(null);
         Mockito.doNothing().when(mockGerenciadorUsuario).salvar(Mockito.any());
@@ -84,10 +74,8 @@ class SingInTest {
     @Test
     void executeEmailInvalido() throws IOException, AlreadyExistsException, PersistenceException {
 
-        Mockito.when(mockReq.getParameter("nome")).thenReturn(this.expectedUser.getNome());
-        Mockito.when(mockReq.getParameter("sobrenome")).thenReturn(this.expectedUser.getSobrenome());
-        Mockito.when(mockReq.getParameter("email")).thenReturn("email");
-
+        this.expectedUser.setEmail("email");
+        loadUserParams();
         singIn.execute(mockReq,mockResp);
         Mockito.verify(mockGerenciadorUsuario,Mockito.never()).salvar(Mockito.any());
     }
@@ -96,19 +84,8 @@ class SingInTest {
     @Test
     void executeDataInvalida() throws IOException, AlreadyExistsException, PersistenceException {
 
-        Mockito.when(mockReq.getParameter("nome")).thenReturn(this.expectedUser.getNome());
-        Mockito.when(mockReq.getParameter("sobrenome")).thenReturn(this.expectedUser.getSobrenome());
-        Mockito.when(mockReq.getParameter("email")).thenReturn(this.expectedUser.getEmail());
-        Mockito.when(mockReq.getParameter("senha")).thenReturn(this.expectedUser.getSenha());
-        Mockito.when(mockReq.getParameter("dataNasc")).thenReturn("Invalido");
-        Mockito.when(mockReq.getParameter("cidade")).thenReturn(this.expectedUser.getCidade());
-        Mockito.when(mockReq.getParameter("apelido")).thenReturn(this.expectedUser.getApelido());
-        Mockito.when(mockReq.getParameter("estado")).thenReturn(this.expectedUser.getEstado().toString());
-
-        Mockito.when(photoUpload.upload(Mockito.any(),Mockito.any(),Mockito.any(),Mockito.any(),Mockito.any()))
-                .thenReturn(null);
-        Mockito.when(sisMovie.getEstadoPelaSigla(Mockito.anyString())).thenReturn(Estado.AC);
-
+        expectedUser.setDataNasc(LocalDate.now().plusDays(1));
+        loadUserParams();
         singIn.execute(mockReq,mockResp);
         Mockito.verify(mockGerenciadorUsuario,Mockito.never()).salvar(Mockito.any());
     }
@@ -117,14 +94,35 @@ class SingInTest {
     @Test
     void executeSenhaInvalida() throws IOException, AlreadyExistsException, PersistenceException {
 
-        Mockito.when(mockReq.getParameter("nome")).thenReturn(this.expectedUser.getNome());
-        Mockito.when(mockReq.getParameter("sobrenome")).thenReturn(this.expectedUser.getSobrenome());
-        Mockito.when(mockReq.getParameter("email")).thenReturn(this.expectedUser.getEmail());
-        Mockito.when(mockReq.getParameter("senha")).thenReturn("");
-
-
+        this.expectedUser.setSenha("");
+        loadUserParams();
         singIn.execute(mockReq,mockResp);
         Mockito.verify(mockGerenciadorUsuario,Mockito.never()).salvar(Mockito.any());
     }
+
+    @DisplayName("Não deve cadastrar com email repetido")
+    @Test
+    void executeEmailRepetido() throws IOException, AlreadyExistsException, PersistenceException {
+        Mockito.doThrow(new AlreadyExistsException("Usuario já cadastrado")).when(mockGerenciadorUsuario).salvar(Mockito.any());;
+        loadUserParams();
+        Assertions.assertThrows(RuntimeException.class, () -> singIn.execute(mockReq,mockResp));
+    }
+
+    private void loadUserParams() {
+        Mockito.when(photoUpload.upload(Mockito.any(),Mockito.any(),Mockito.any(),Mockito.any(),Mockito.any(Map.class)))
+                .then(invocationOnMock -> {
+                    Map <String,String> map = invocationOnMock.getArgument(4);
+                    map.put("nome",this.expectedUser.getNome());
+                    map.put("sobrenome",this.expectedUser.getSobrenome());
+                    map.put("email",this.expectedUser.getEmail());
+                    map.put("senha",this.expectedUser.getSenha());
+                    map.put("dataNasc",this.expectedUser.getDataNasc().toString());
+                    map.put("cidade",this.expectedUser.getCidade());
+                    map.put("apelido",this.expectedUser.getApelido());
+                    map.put("estado",this.expectedUser.getEstado().toString());
+                    return null;
+                });
+    }
+
 
 }

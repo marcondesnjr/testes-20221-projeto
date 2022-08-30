@@ -43,10 +43,4 @@ public class ConnectionManager {
         return conn;
     }
     
-    public static void main(String[] args) {
-        Map map = new HashMap();
-        map.put("objeto", new Object());
-        map.get("objeto");
-    }
-    
 }

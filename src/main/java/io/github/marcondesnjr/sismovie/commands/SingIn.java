@@ -12,7 +12,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDate;
 import java.util.HashMap;
-import java.util.Map;;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -51,25 +53,28 @@ public class SingIn implements Command{
             
             File uploadedFile = uploader.upload(request, DIRETORY_PERFIL, "perfil", ".jpg", param);
             
-            String nome = request.getParameter("nome");
-            String sobrenome = request.getParameter("sobrenome");
-            String email =  request.getParameter("email");
+            String nome = param.get("nome");
+            String sobrenome = param.get("sobrenome");
+            String email =  param.get("email");
             if(!email.contains("@")){
                 throw new Exception("Email Invalido");
             }
-            String senha =  request.getParameter("senha");
+            String senha =  param.get("senha");
             if(senha.isEmpty()){
                 throw new Exception("Senha Invalida");
             }
-            String data =  request.getParameter("dataNasc");
-            String cidade = request.getParameter("cidade");
-            String apelido = request.getParameter("apelido");
-            Estado est = sisMovie.getEstadoPelaSigla(request.getParameter("estado"));
+            String data =  param.get("dataNasc");
+            String cidade = param.get("cidade");
+            String apelido = param.get("apelido");
+            Estado est = sisMovie.getEstadoPelaSigla(param.get("estado"));
             LocalDate dataNasc = LocalDate.parse(data);
+            if (dataNasc.isAfter(LocalDate.now())){
+                throw new Exception("Data de nascimento Invalida");
+            }
             String foto = uploadedFile != null? DIRETORY_PERFIL +"/"+ uploadedFile.getName(): null;
             Usuario usr = null;
             Usuario usrlog = (Usuario) request.getSession().getAttribute("usrLog");
-            if(request.getParameter("adm") != null &&  request.getParameter("adm").equals("1")
+            if(request.getParameter("adm") != null &&  param.get("adm").equals("1")
                     && usrlog != null && usrlog.getPermissao() == Permissao.ADMINISTRADOR){
                 usr = new Usuario(nome, sobrenome, email, senha, dataNasc, cidade, est, Permissao.ADMINISTRADOR);
             }
@@ -83,8 +88,9 @@ public class SingIn implements Command{
             response.sendRedirect(request.getContextPath()+"/index/");
             return null;
         } catch (AlreadyExistsException ex) {
-            return null;
+            throw new RuntimeException(ex);
         }catch (Exception ex) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE,null,ex);
             return null;
         }
 

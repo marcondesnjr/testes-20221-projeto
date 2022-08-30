@@ -135,7 +135,7 @@ public class DAOBDAmizade implements DAOAmizade{
     
     @Override
     public boolean existeSolicitacao(Usuario usr, Usuario other) throws PersistenceException{
-        String sql ="SELECT * FROM AMIZADE_USUARIO "
+        String sql ="SELECT * FROM AMIZADE JOIN USUARIO ON remetente = email OR destinatario = email "
                 + "WHERE (remetente = ? AND destinatario = ?) OR (remetente = ? AND destinatario = ?)";
         try(PreparedStatement ps = conn.prepareStatement(sql)){
             ps.setString(1, usr.getEmail());

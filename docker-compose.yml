@@ -1,0 +1,18 @@
+version: '3.1'
+
+services:
+  db:
+    build:
+      dockerfile: Dockerfile-db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123
+      POSTGRES_DB: sismovie
+    ports:
+      - "5433:5432"
+
+  web:
+    build:
+      dockerfile: Dockerfile-server
+    ports:
+      - "8080:8080"

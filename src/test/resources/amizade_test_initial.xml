@@ -1,0 +1,7 @@
+<dataset>
+    <USUARIO nome='nome1' sobrenome='sobrenome1' email='email1@email.com' senha='123' apelido='apelido1'
+             dt_nasc='2000-12-12' foto='foto1.jpg' cidade='cidade1' estado='AC' permissao='0'/>
+    <USUARIO nome='nome2' sobrenome='sobrenome2' email='email2@email.com' senha='123' apelido='apelido2'
+             dt_nasc='2000-12-12' foto='foto1.jpg' cidade='cidade1' estado='AC' permissao='0'/>
+    <AMIZADE/>
+</dataset>
