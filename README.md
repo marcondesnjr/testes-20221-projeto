@@ -1,7 +1,8 @@
 # Projeto da disciplina de Testes
 
-* Os testes unitários foram implementados utilizando JUnit e são executados
-pelo plugin **surefire** e podem ser durante a *phase* **test** 
+* Os testes unitários foram implementados utilizando JUnit e Mockito e 
+são executados pelo plugin **surefire** e podem ser durante 
+a *phase* **test** 
 
 
 * Os testes de integração foram implementados utilizando DBUnit e são 
