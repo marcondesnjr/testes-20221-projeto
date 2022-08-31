@@ -10,6 +10,8 @@ import io.github.marcondesnjr.sismovie.commands.Command;
 import io.github.marcondesnjr.sismovie.dao.PersistenceException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -24,6 +26,7 @@ public class LoadEstados implements Command{
             request.setAttribute("estados", SisMovie.todosNomesEstados());
             return null;
         } catch (PersistenceException ex) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE,null, ex);
             return "/pages/erro-per.jsp";
         }
     }

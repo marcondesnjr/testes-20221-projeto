@@ -27,8 +27,10 @@ public class RejeitarSolicitacao implements Command{
             response.sendRedirect(request.getContextPath()+"/home/");
             return null;
         } catch (PersistenceException ex) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE,null, ex);
             return ErrorPages.PERSISTENCE_ERROR.getPAGE();
         } catch (IOException ex) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE,null, ex);
             return ErrorPages.NOT_FOUND.getPAGE();
         }
     }

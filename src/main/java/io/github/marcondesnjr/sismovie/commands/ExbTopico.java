@@ -23,7 +23,7 @@ public class ExbTopico implements Command{
             Topico tp = GerenciadorTopico.localizar(Integer.parseInt(id));
             tp = GerenciadorComentario.carregarComentarios(tp);
             request.setAttribute("topico", tp);
-            return "control?command=ExbGrupo&id=5&tpid="+id;
+            return "control?command=ExbGrupo&id=1&tpid="+id;
         } catch (PersistenceException ex) {
             Logger.getLogger(ExbTopico.class.getName()).log(Level.SEVERE, null, ex);
             return "persistenceError";

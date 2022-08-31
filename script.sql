@@ -54,6 +54,7 @@ CREATE TABLE TOPICO(
 );
 
 CREATE TABLE COMENTARIO(
+    id Serial PRIMARY KEY,
     comentario VARCHAR,
     tpc_id INTEGER REFERENCES TOPICO(id),
     usr_email VARCHAR REFERENCES USUARIO(email)
@@ -92,15 +93,22 @@ CREATE TABLE DIRETOR_FILME(
 INSERT INTO ESTADO
 (sigla)
 VALUES('PB');
+
 INSERT INTO ESTADO
 (sigla)
 VALUES('AC');
 
+INSERT INTO USUARIO(nome, sobrenome, email, senha, apelido, dt_nasc, foto, cidade, estado, permissao)
+VALUES ('admin','admin','admin@admin.com','admin','admin','1111-11-11','admin.jpg','admin','AC','ADMINISTRADOR');
 
+INSERT INTO GENERO(nome)
+VALUES ('TERROR');
+INSERT INTO GENERO(nome)
+VALUES ('ACAO');
 
 
 create or replace function avl_media(INTEGER)
-   returns INTEGER 
+   returns DOUBLE PRECISION
    language plpgsql
   as
 $$

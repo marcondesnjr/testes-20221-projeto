@@ -1,3 +1,4 @@
  #!/bin/sh
 
- sudo docker compose up --build -d
+mvn clean install
+sudo docker compose up --build -d

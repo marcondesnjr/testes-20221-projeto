@@ -6,6 +6,8 @@ import io.github.marcondesnjr.sismovie.Usuario;
 import io.github.marcondesnjr.sismovie.dao.PersistenceException;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -28,6 +30,7 @@ public class LogIn implements Command{
             return null;
         }
         catch (IOException | SQLException | PersistenceException ex) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE,null, ex);
             return ErrorPages.PERSISTENCE_ERROR.getPAGE();
         }
     }

@@ -88,6 +88,7 @@ public class SingIn implements Command{
             response.sendRedirect(request.getContextPath()+"/index/");
             return null;
         } catch (AlreadyExistsException ex) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE,null, ex);
             throw new RuntimeException(ex);
         }catch (Exception ex) {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE,null,ex);

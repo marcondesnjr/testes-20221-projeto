@@ -16,17 +16,22 @@ import java.util.logging.Logger;
  */
 public class ConnectionManager {
 
-    private static String URL;
-    private static String NOME;
-    private static String SENHA;
+    private static final String URL;
+    private static final String NOME;
+    private static final String SENHA;
 
     static{
         Properties properties = new Properties();
         try {
             properties.load(ConnectionManager.class.getResourceAsStream("/dbconfig.properties"));
-            URL = properties.getProperty("db.url");
-            NOME = properties.getProperty("db.user");
-            SENHA = properties.getProperty("db.pass");
+            String systemUrl = System.getenv("DB_URL");
+            URL = systemUrl == null? properties.getProperty("db.url"): systemUrl;
+
+            String systemNome = System.getenv("DB_NOME");
+            NOME = systemNome == null? properties.getProperty("db.user"): systemNome;
+
+            String systemSenha = System.getenv("DB_SENHA");
+            SENHA = systemSenha == null? properties.getProperty("db.pass"): systemSenha;
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
